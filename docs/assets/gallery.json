@@ -213,11 +213,11 @@
       5.0,
       8.0
     ],
-    "video": "assets/videos/jog_jump_continue.mp4",
-    "poster": "assets/posters/jog_jump_continue.jpg",
+    "video": "assets/videos/jog_jump_continue.mp4?v=mesh-depth-20260928-v3",
+    "poster": "assets/posters/jog_jump_continue.jpg?v=mesh-depth-20260928-v3",
     "path_control": true,
-    "bytes": 682994,
-    "poster_time_seconds": 2.6666666666666665
+    "bytes": 807554,
+    "poster_time_seconds": 4.0
   },
   {
     "id": "walk_backward_turn_forward",
@@ -255,11 +255,11 @@
       12.0,
       16.0
     ],
-    "video": "assets/videos/stop_wave_resume.mp4",
-    "poster": "assets/posters/stop_wave_resume.jpg",
+    "video": "assets/videos/stop_wave_resume.mp4?v=mesh-depth-20260928-v3",
+    "poster": "assets/posters/stop_wave_resume.jpg?v=mesh-depth-20260928-v3",
     "path_control": true,
-    "bytes": 948875,
-    "poster_time_seconds": 3.0
+    "bytes": 1096834,
+    "poster_time_seconds": 8.0
   },
   {
     "id": "walking_jogging_running",
@@ -276,13 +276,13 @@
       8.0,
       8.0
     ],
-    "video": "assets/videos/walking_jogging_running.mp4",
-    "poster": "assets/posters/walking_jogging_running.jpg",
+    "video": "assets/videos/walking_jogging_running.mp4?v=mesh-depth-20260928-v3",
+    "poster": "assets/posters/walking_jogging_running.jpg?v=mesh-depth-20260928-v3",
     "path_control": true,
     "parallel_prompts": true,
     "aspect_ratio": 2.1333333333333333,
-    "bytes": 2152526,
-    "poster_time_seconds": 2.6666666666666665
+    "bytes": 2890709,
+    "poster_time_seconds": 2.0
   },
   {
     "id": "curved_path",
@@ -380,11 +380,11 @@
       54.0,
       60.0
     ],
-    "video": "assets/videos/long_locomotion.mp4",
-    "poster": "assets/posters/long_locomotion.jpg",
+    "video": "assets/videos/long_locomotion.mp4?v=mesh-depth-20260928-v3",
+    "poster": "assets/posters/long_locomotion.jpg?v=mesh-depth-20260928-v3",
     "path_control": true,
-    "bytes": 5264846,
-    "poster_time_seconds": 3.0
+    "bytes": 5780898,
+    "poster_time_seconds": 33.0
   },
   {
     "id": "court_sequence",
@@ -415,10 +415,10 @@
       50.0,
       56.0
     ],
-    "video": "assets/videos/court_sequence.mp4",
-    "poster": "assets/posters/court_sequence.jpg",
+    "video": "assets/videos/court_sequence.mp4?v=mesh-depth-20260928-v3",
+    "poster": "assets/posters/court_sequence.jpg?v=mesh-depth-20260928-v3",
     "path_control": true,
-    "bytes": 6089524,
-    "poster_time_seconds": 3.0
+    "bytes": 6772841,
+    "poster_time_seconds": 19.7
   }
 ]
