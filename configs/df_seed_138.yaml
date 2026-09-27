@@ -1,0 +1,140 @@
+# Single-GPU configuration.
+# python train_df.py --config configs/df_seed_138.yaml
+exp_name: df_seed_138
+seed: 1234
+debug: false
+train: true
+save_dir: ${dirs.outputs}
+resume_ckpt: null
+test_ckpt: ${dirs.checkpoints}/seed_fk_300k/model.ckpt
+representation: mei138
+test_setting:
+  render: true
+  SEED:
+    compare_folders:
+    - ${dirs.raw_data}/SEED/MEI138/new_joint_vecs_uni
+    compare_names:
+    - Ground Truth
+val_repeat: 1
+logger:
+  wandb:
+    wandb_key: ${oc.env:WANDB_API_KEY,null}
+    project: FloodDiffusion2
+    entity: ${oc.env:WANDB_ENTITY,null}
+trainer:
+  max_steps: 300000
+  accelerator: gpu
+  devices: 1
+  log_every_n_steps: 100
+  precision: bf16-mixed
+  num_nodes: 1
+validation:
+  validation_steps: 5000
+  test_steps: 5000
+  save_every_n_steps: 5000
+  save_top_k: 100
+metrics:
+  t2m:
+    target: metrics.MEI138.t2m.T2MMetrics
+    fid_target: original
+    params:
+      evaluate_text: true
+      metric_mean_path: ${dirs.deps}/t2m/meta/mean.npy
+      metric_std_path: ${dirs.deps}/t2m/meta/std.npy
+      wordvectorizer:
+        target: metrics.HumanML3D263.word_vectorizer.WordVectorizer
+        params:
+          meta_root: ${dirs.deps}/glove
+          prefix: our_vab
+        max_text_len: 20
+      textencoder:
+        target: metrics.HumanML3D263.t2m_evaluator.TextEncoderBiGRUCo
+        ckpt: ${dirs.deps}/t2m/humanml3d/text_encoder.pt
+        params:
+          word_size: 300
+          pos_size: 15
+          hidden_size: 512
+          output_size: 512
+      moveencoder:
+        target: metrics.HumanML3D263.t2m_evaluator.MovementConvEncoder
+        ckpt: ${dirs.deps}/t2m/humanml3d/movement_encoder.pt
+        params:
+          input_size: 259
+          hidden_size: 512
+          output_size: 512
+      motionencoder:
+        target: metrics.HumanML3D263.t2m_evaluator.MotionEncoderBiGRUCo
+        ckpt: ${dirs.deps}/t2m/humanml3d/motion_encoder.pt
+        params:
+          input_size: 512
+          hidden_size: 1024
+          output_size: 512
+data:
+  target: datasets.humanml3d.HumanML3DDataset
+  collate_fn: datasets.humanml3d.collate_fn
+  train_bs: 128
+  val_bs: 32
+  test_bs: 16
+  num_workers: 8
+  train_meta_paths:
+  - path: ${dirs.raw_data}/SEED/MEI138/train.txt
+    name: SEED
+  val_meta_paths:
+  - path: ${dirs.raw_data}/SEED/MEI138/test_content.txt
+    name: SEED
+  test_meta_paths:
+  - path: ${dirs.raw_data}/SEED/MEI138/test_min.txt
+    name: SEED
+  feature_path: new_joint_vecs_uni
+  text_path: texts
+  random_length: 0
+  min_length: 60
+  max_length: 300
+model:
+  target: models.diffusion_forcing_wan.DiffForcingWanModel
+  ema_decay: 0.99
+  params:
+    schedule_config:
+      noise_type: linear
+      chunk_size: 30
+      steps: 30
+      sigma_type: zero
+      sigma_scale: 1.0
+      random_epsilon: 0.05
+      train_n_windows: 8
+    text_config:
+      len: 512
+      dim: 4096
+      checkpoint_path: ${dirs.deps}/t5_umt5-xxl-enc-bf16/models_t5_umt5-xxl-enc-bf16.pth
+      tokenizer_path: ${dirs.deps}/t5_umt5-xxl-enc-bf16/google/umt5-xxl
+    input_dim: 138
+    loss_W: ${dirs.checkpoints}/seed_fk_300k/assets/W.npy
+    loss_w_coefficient: 1.0
+    mean_path: ${dirs.checkpoints}/seed_fk_300k/assets/Mean.npy
+    std_path: ${dirs.checkpoints}/seed_fk_300k/assets/Std.npy
+    input_keys:
+      feature: feature
+      feature_length: feature_length
+      text: text
+      text_end: feature_text_end
+    cfg_config:
+      text_scale: 2.0
+      null_scale: -1.0
+    prediction_type: vel
+    attn_type: partial
+fk_matrix:
+  recipe: seed138_mesh
+optimizer:
+  target: AdamW
+  params:
+    lr: 0.0002
+    betas:
+    - 0.9
+    - 0.99
+    weight_decay: 0.0
+    eps: 1.0e-08
+lr_scheduler:
+  target: CosineAnnealingLR
+  params:
+    T_max: 300000
+    eta_min: 1.0e-06

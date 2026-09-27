@@ -1,0 +1,34 @@
+torch==2.9.1
+lightning>=2.6
+torch_ema
+transformers
+torchmetrics
+omegaconf
+diffusers
+
+tensorboard
+wandb
+
+# render
+trimesh
+pyrender
+moviepy
+matplotlib
+Pillow
+imageio[ffmpeg]
+
+# configuration and numerical utilities
+PyYAML
+scipy
+
+# wan
+ftfy
+einops
+
+# asset setup and tokenization
+huggingface_hub>=0.34
+numpy
+tqdm
+regex
+sentencepiece
+protobuf

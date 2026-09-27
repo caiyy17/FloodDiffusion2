@@ -1,0 +1,49 @@
+{
+  "version": 1,
+  "repository": "caiyiyi1998/FloodDiffusion2-Data",
+  "revision": "f54100ff5ba386140f88b06c2112ba388e15dc5f",
+  "packs": [
+    {
+      "name": "HumanML3D-263",
+      "archive": "HumanML3D-263.zip",
+      "size": 4404648158,
+      "sha256": "40e597fe57bfbc79b0a0a7cde610d877ca032614bdd5056def65a2765baabe68",
+      "root": "data/HumanML3D/HumanML3D263",
+      "file_count": 87698,
+      "uncompressed_bytes": 4373210111,
+      "inventory": {
+        "path": "data/HumanML3D/HumanML3D263/release_manifest.json",
+        "size": 13981107,
+        "sha256": "978c0558c0e9a9ded48136ee3d14c4088dfddb593aee7404f9dd952eb8a18796"
+      }
+    },
+    {
+      "name": "BABEL-263",
+      "archive": "BABEL-263.zip",
+      "size": 1819423248,
+      "sha256": "3e1b6f3f5e55c17ebfff66ca4ae8684f7479eb1252da4b72375e0e218e429af0",
+      "root": "data/BABEL/HumanML3D263",
+      "file_count": 16031,
+      "uncompressed_bytes": 1814043222,
+      "inventory": {
+        "path": "data/BABEL/HumanML3D263/release_manifest.json",
+        "size": 2457148,
+        "sha256": "e037bbb8325f92de50c76b115dc3eae1ecd559f86d64349397f42d206c961c9f"
+      }
+    },
+    {
+      "name": "SEED-138",
+      "archive": "SEED-138.zip",
+      "size": 17524339022,
+      "sha256": "225d23793b69b24672308c6ec1dcf7d778c2af2e89ee47aa54d63662fefa40c7",
+      "root": "data/SEED/MEI138",
+      "file_count": 284448,
+      "uncompressed_bytes": 17413355940,
+      "inventory": {
+        "path": "data/SEED/MEI138/release_manifest.json",
+        "size": 48035296,
+        "sha256": "20e9381232ef782c4ae4341b19c18fe00e1b411c79db7a1e15c62266a0a763c8"
+      }
+    }
+  ]
+}

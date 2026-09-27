@@ -1,0 +1,40 @@
+**__pycache__**
+**.ipynb_checkpoints**
+**.DS_Store**
+**.vscode**
+*.pyc
+*.model
+*.pt
+*.pth
+logs*/
+*.log
+log_*
+slurm*
+*.bin
+.omc
+
+# cache
+.ruff_cache/
+
+# logs
+lightning_logs/
+wandb/
+outputs/
+deps/
+raw_data/
+pretrained/
+tmp/
+data/
+checkpoints/
+/.downloads/
+/.cache/
+
+# configs
+configs/paths.yaml
+test_results/
+tests/
+scripts/
+
+# Local development notes
+/CLAUDE.md
+/PROGRESS.md

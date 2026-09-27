@@ -1,0 +1,209 @@
+{
+  "format_version": 1,
+  "repository": "caiyiyi1998/FloodDiffusion2",
+  "revision": "5c284f166f566db7780285997d119e0c62876b09",
+  "models": [
+    {
+      "name": "humanml3d_fk_60k",
+      "config": "configs/df_humanml3d_263.yaml",
+      "step": 60000,
+      "files": [
+        {
+          "path": "checkpoints/humanml3d_fk_60k/model.ckpt",
+          "size": 2285681258,
+          "sha256": "d48332bcd88d06098627ed895e8d708702290d6ed518b20e5573b6b959725a63"
+        },
+        {
+          "path": "checkpoints/humanml3d_fk_60k/config.yaml",
+          "size": 3811,
+          "sha256": "983449db24beb87f9d63fbde21927e7119990bf10d6af6e32324f1a5526a7b8f"
+        },
+        {
+          "path": "checkpoints/humanml3d_fk_60k/assets/Mean.npy",
+          "size": 1180,
+          "sha256": "bef8fea46b1c9ed21c378a378c66c5f6b55f7ecf2fdfa911670a7d020e7fffb0"
+        },
+        {
+          "path": "checkpoints/humanml3d_fk_60k/assets/Std.npy",
+          "size": 1180,
+          "sha256": "041dee3a9e09c97e5f66e10fb4b63b9410fb57ecc609a556ec0b65d8def2fb20"
+        },
+        {
+          "path": "checkpoints/humanml3d_fk_60k/assets/W.npy",
+          "size": 553480,
+          "sha256": "4a8411b10882a74d09479e20e8ec10d0208473127f23e9da4d3192e2fea145d6"
+        }
+      ]
+    },
+    {
+      "name": "humanml3d_path_fk_55k",
+      "config": "configs/df_humanml3d_263_path.yaml",
+      "step": 55000,
+      "files": [
+        {
+          "path": "checkpoints/humanml3d_path_fk_55k/model.ckpt",
+          "size": 2285614312,
+          "sha256": "ee1239ee5458781ab84d21329d190bfcb45a23d12bec17df48924e000672d104"
+        },
+        {
+          "path": "checkpoints/humanml3d_path_fk_55k/config.yaml",
+          "size": 3877,
+          "sha256": "efcb66b0ec75c721b418887fa9824285dcc8934dc98550218348303bda273332"
+        },
+        {
+          "path": "checkpoints/humanml3d_path_fk_55k/assets/Mean.npy",
+          "size": 1180,
+          "sha256": "bef8fea46b1c9ed21c378a378c66c5f6b55f7ecf2fdfa911670a7d020e7fffb0"
+        },
+        {
+          "path": "checkpoints/humanml3d_path_fk_55k/assets/Std.npy",
+          "size": 1180,
+          "sha256": "041dee3a9e09c97e5f66e10fb4b63b9410fb57ecc609a556ec0b65d8def2fb20"
+        },
+        {
+          "path": "checkpoints/humanml3d_path_fk_55k/assets/W.npy",
+          "size": 540928,
+          "sha256": "ebc7243c5185ab6203af8e0b912e05d6bd15919f9eda7391b548a870eefea373"
+        }
+      ]
+    },
+    {
+      "name": "seed_fk_300k",
+      "config": "configs/df_seed_138.yaml",
+      "step": 300000,
+      "files": [
+        {
+          "path": "checkpoints/seed_fk_300k/model.ckpt",
+          "size": 2280356842,
+          "sha256": "15caeff8faaa19f09437aee9f79088955708a32fd6ff609cc990338460dc130f"
+        },
+        {
+          "path": "checkpoints/seed_fk_300k/config.yaml",
+          "size": 3697,
+          "sha256": "41825321dce5aea7b3a384b4717b74aa7141c8e93988abc1987fd20bbdf6c686"
+        },
+        {
+          "path": "checkpoints/seed_fk_300k/assets/Mean.npy",
+          "size": 680,
+          "sha256": "98456f74f871856f48880c72d7340a776cb45dc88ba33e86491cfaf1f8bc9534"
+        },
+        {
+          "path": "checkpoints/seed_fk_300k/assets/Std.npy",
+          "size": 680,
+          "sha256": "5ea97221c9a6d471d12b92d6562d4214d1080fb398e96e43f628b393a70b2b96"
+        },
+        {
+          "path": "checkpoints/seed_fk_300k/assets/W.npy",
+          "size": 152480,
+          "sha256": "d5c81bdf26ff2347bb59840ab3bb52b179d9488fbb5ff88ea65f3e76fc9c5502"
+        }
+      ]
+    },
+    {
+      "name": "seed_path_fk_300k",
+      "config": "configs/df_seed_138_path.yaml",
+      "step": 300000,
+      "files": [
+        {
+          "path": "checkpoints/seed_path_fk_300k/model.ckpt",
+          "size": 2280293224,
+          "sha256": "d60a085a280962f66669fbeb12568e6f6cd1b67304647c1b73fc847862498ef6"
+        },
+        {
+          "path": "checkpoints/seed_path_fk_300k/config.yaml",
+          "size": 3811,
+          "sha256": "2c414967a1e1ad2d6e959e4a1ce7fc22d43086a69340d245f16a5e41bcef850e"
+        },
+        {
+          "path": "checkpoints/seed_path_fk_300k/assets/Mean.npy",
+          "size": 680,
+          "sha256": "98456f74f871856f48880c72d7340a776cb45dc88ba33e86491cfaf1f8bc9534"
+        },
+        {
+          "path": "checkpoints/seed_path_fk_300k/assets/Std.npy",
+          "size": 680,
+          "sha256": "5ea97221c9a6d471d12b92d6562d4214d1080fb398e96e43f628b393a70b2b96"
+        },
+        {
+          "path": "checkpoints/seed_path_fk_300k/assets/W.npy",
+          "size": 145928,
+          "sha256": "0effaf2383a21f4e5a1bf03aed5841060cd45226ac93177e8e09ecd9dbf540b5"
+        }
+      ]
+    }
+  ],
+  "dependencies": {
+    "repository": "caiyiyi1998/FloodDiffusion2",
+    "revision": "4b0b128072efb461d93dbf2b72064fa95ba8f80f",
+    "archive": "deps.zip",
+    "size": 12992154753,
+    "sha256": "bd12f617474bf9f2a4321308b6ee3697b34b11a4ce77f47ff7d50db0d6fe7d85",
+    "files": [
+      {
+        "path": "deps/t5_umt5-xxl-enc-bf16/models_t5_umt5-xxl-enc-bf16.pth",
+        "size": 11361920418,
+        "crc32": "201263e2"
+      },
+      {
+        "path": "deps/t5_umt5-xxl-enc-bf16/google/umt5-xxl/special_tokens_map.json",
+        "size": 6623,
+        "crc32": "52b4332b"
+      },
+      {
+        "path": "deps/t5_umt5-xxl-enc-bf16/google/umt5-xxl/spiece.model",
+        "size": 4548313,
+        "crc32": "3d61aeda"
+      },
+      {
+        "path": "deps/t5_umt5-xxl-enc-bf16/google/umt5-xxl/tokenizer.json",
+        "size": 16837417,
+        "crc32": "df89c52f"
+      },
+      {
+        "path": "deps/t5_umt5-xxl-enc-bf16/google/umt5-xxl/tokenizer_config.json",
+        "size": 61728,
+        "crc32": "882574af"
+      },
+      {
+        "path": "deps/glove/our_vab_data.npy",
+        "size": 10077728,
+        "crc32": "16c5f298"
+      },
+      {
+        "path": "deps/glove/our_vab_idx.pkl",
+        "size": 79811,
+        "crc32": "d99790b0"
+      },
+      {
+        "path": "deps/glove/our_vab_words.pkl",
+        "size": 67470,
+        "crc32": "b473f73b"
+      },
+      {
+        "path": "deps/t2m/humanml3d/motion_encoder.pt",
+        "size": 62995445,
+        "crc32": "729e63ff"
+      },
+      {
+        "path": "deps/t2m/humanml3d/movement_encoder.pt",
+        "size": 7374081,
+        "crc32": "50493a9c"
+      },
+      {
+        "path": "deps/t2m/humanml3d/text_encoder.pt",
+        "size": 16406745,
+        "crc32": "b1579742"
+      },
+      {
+        "path": "deps/t2m/meta/mean.npy",
+        "size": 2232,
+        "crc32": "fe0c91c4"
+      },
+      {
+        "path": "deps/t2m/meta/std.npy",
+        "size": 2232,
+        "crc32": "8e2a77ab"
+      }
+    ]
+  }
+}

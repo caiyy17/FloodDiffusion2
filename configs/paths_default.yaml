@@ -1,0 +1,6 @@
+# Shared paths. Set local overrides in configs/paths.yaml.
+dirs:
+  deps: ./deps
+  raw_data: ./data
+  outputs: ./outputs
+  checkpoints: ./checkpoints
