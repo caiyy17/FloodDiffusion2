@@ -234,11 +234,11 @@
       6.0,
       10.0
     ],
-    "video": "assets/videos/walk_backward_turn_forward.mp4",
-    "poster": "assets/posters/walk_backward_turn_forward.jpg",
+    "video": "assets/videos/walk_backward_turn_forward.mp4?v=seed-turn-20260928-v1",
+    "poster": "assets/posters/walk_backward_turn_forward.jpg?v=seed-turn-20260928-v1",
     "path_control": true,
-    "bytes": 529709,
-    "poster_time_seconds": 3.0
+    "bytes": 941975,
+    "poster_time_seconds": 5.0
   },
   {
     "id": "stop_wave_resume",
