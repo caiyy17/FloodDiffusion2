@@ -2,6 +2,11 @@
 
 **Efficient and Path Controllable Streaming Motion Generation**
 
+[Project page](https://caiyy17.github.io/FloodDiffusion2/) ·
+[Paper](https://caiyy17.github.io/FloodDiffusion2/assets/FloodDiffusion2.pdf) ·
+[Models](https://huggingface.co/caiyiyi1998/FloodDiffusion2) ·
+[Data](https://huggingface.co/datasets/caiyiyi1998/FloodDiffusion2-Data)
+
 FloodDiffusion 2 (FD2) improves the efficiency and controllability of
 FloodDiffusion while preserving continuous motion generation from changing text
 prompts. The paper develops three parts:

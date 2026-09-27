@@ -1,0 +1,424 @@
+[
+  {
+    "id": "walking",
+    "section": "motion-gallery",
+    "title": "Walking",
+    "prompts": [
+      "A person walks forward."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/walking.mp4",
+    "poster": "assets/posters/walking.jpg",
+    "path_control": false,
+    "bytes": 436517,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "waving",
+    "section": "motion-gallery",
+    "title": "Waving",
+    "prompts": [
+      "A person waves with both hands."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/waving.mp4",
+    "poster": "assets/posters/waving.jpg",
+    "path_control": false,
+    "bytes": 171420,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "kicking",
+    "section": "motion-gallery",
+    "title": "Kicking",
+    "prompts": [
+      "A person kicks forward with the right leg."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/kicking.mp4",
+    "poster": "assets/posters/kicking.jpg",
+    "path_control": false,
+    "bytes": 284481,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "jumping",
+    "section": "motion-gallery",
+    "title": "Jumping",
+    "prompts": [
+      "A person jumps up and down."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/jumping.mp4",
+    "poster": "assets/posters/jumping.jpg",
+    "path_control": false,
+    "bytes": 287641,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "picking_up",
+    "section": "motion-gallery",
+    "title": "Picking up an object",
+    "prompts": [
+      "A person bends down and picks something up from the floor."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/picking_up.mp4",
+    "poster": "assets/posters/picking_up.jpg",
+    "path_control": false,
+    "bytes": 304162,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "squatting",
+    "section": "motion-gallery",
+    "title": "Squatting",
+    "prompts": [
+      "A person squats down and stands up."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/squatting.mp4",
+    "poster": "assets/posters/squatting.jpg",
+    "path_control": false,
+    "bytes": 319248,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "crouched_walking",
+    "section": "motion-gallery",
+    "title": "Crouched walking",
+    "prompts": [
+      "A person walks in a crouched position."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/crouched_walking.mp4",
+    "poster": "assets/posters/crouched_walking.jpg",
+    "path_control": false,
+    "bytes": 444461,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "dancing",
+    "section": "motion-gallery",
+    "title": "Dancing",
+    "prompts": [
+      "A person dances."
+    ],
+    "duration_seconds": 6.0,
+    "ends_seconds": [
+      6.0
+    ],
+    "video": "assets/videos/dancing.mp4",
+    "poster": "assets/posters/dancing.jpg",
+    "path_control": false,
+    "bytes": 362827,
+    "poster_time_seconds": 2.0
+  },
+  {
+    "id": "walk_pick_walk",
+    "section": "continuous-transitions",
+    "title": "Walk, pick up, and walk",
+    "prompts": [
+      "A person walks forward.",
+      "A person bends down and picks something up from the floor.",
+      "A person walks forward."
+    ],
+    "duration_seconds": 14.0,
+    "ends_seconds": [
+      4.0,
+      8.0,
+      14.0
+    ],
+    "video": "assets/videos/walk_pick_walk.mp4",
+    "poster": "assets/posters/walk_pick_walk.jpg",
+    "path_control": false,
+    "bytes": 1035945,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "squat_jump_dance",
+    "section": "continuous-transitions",
+    "title": "Squat, jump, and dance",
+    "prompts": [
+      "A person squats down and stands up.",
+      "A person jumps up and down.",
+      "A person dances."
+    ],
+    "duration_seconds": 14.0,
+    "ends_seconds": [
+      4.0,
+      8.0,
+      14.0
+    ],
+    "video": "assets/videos/squat_jump_dance.mp4",
+    "poster": "assets/posters/squat_jump_dance.jpg",
+    "path_control": false,
+    "bytes": 738915,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "kick_dance_pick",
+    "section": "continuous-transitions",
+    "title": "Kick, dance, and pick up",
+    "prompts": [
+      "A person kicks forward with the right leg.",
+      "A person dances.",
+      "A person bends down and picks something up from the floor."
+    ],
+    "duration_seconds": 18.0,
+    "ends_seconds": [
+      4.0,
+      10.0,
+      18.0
+    ],
+    "video": "assets/videos/kick_dance_pick.mp4",
+    "poster": "assets/posters/kick_dance_pick.jpg",
+    "path_control": false,
+    "bytes": 1018396,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "jog_jump_continue",
+    "section": "continuous-transitions",
+    "title": "Jog, jump, and continue",
+    "prompts": [
+      "A person jogs forward.",
+      "A person jumps far forward.",
+      "A person jogs forward."
+    ],
+    "duration_seconds": 8.0,
+    "ends_seconds": [
+      3.0,
+      5.0,
+      8.0
+    ],
+    "video": "assets/videos/jog_jump_continue.mp4",
+    "poster": "assets/posters/jog_jump_continue.jpg",
+    "path_control": true,
+    "bytes": 682994,
+    "poster_time_seconds": 2.6666666666666665
+  },
+  {
+    "id": "walk_backward_turn_forward",
+    "section": "continuous-transitions",
+    "title": "Walk backward, turn, and walk forward",
+    "prompts": [
+      "A person walks backward.",
+      "A person turns around.",
+      "A person walks forward."
+    ],
+    "duration_seconds": 10.0,
+    "ends_seconds": [
+      4.0,
+      6.0,
+      10.0
+    ],
+    "video": "assets/videos/walk_backward_turn_forward.mp4",
+    "poster": "assets/posters/walk_backward_turn_forward.jpg",
+    "path_control": true,
+    "bytes": 529709,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "stop_wave_resume",
+    "section": "continuous-transitions",
+    "title": "Stop, wave, and resume",
+    "prompts": [
+      "a person walks forward at a steady pace.",
+      "a person waves their right hand.",
+      "a person walks forward at a steady pace."
+    ],
+    "duration_seconds": 16.0,
+    "ends_seconds": [
+      4.0,
+      12.0,
+      16.0
+    ],
+    "video": "assets/videos/stop_wave_resume.mp4",
+    "poster": "assets/posters/stop_wave_resume.jpg",
+    "path_control": true,
+    "bytes": 948875,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "walking_jogging_running",
+    "section": "path-speed-control",
+    "title": "Walking, jogging, and running",
+    "prompts": [
+      "A person walks forward.",
+      "A person jogs forward.",
+      "A person runs forward."
+    ],
+    "duration_seconds": 8.0,
+    "ends_seconds": [
+      8.0,
+      8.0,
+      8.0
+    ],
+    "video": "assets/videos/walking_jogging_running.mp4",
+    "poster": "assets/posters/walking_jogging_running.jpg",
+    "path_control": true,
+    "parallel_prompts": true,
+    "aspect_ratio": 2.1333333333333333,
+    "bytes": 2152526,
+    "poster_time_seconds": 2.6666666666666665
+  },
+  {
+    "id": "curved_path",
+    "section": "path-speed-control",
+    "title": "Walking along a curved path",
+    "prompts": [
+      "A person walks forward."
+    ],
+    "duration_seconds": 14.0,
+    "ends_seconds": [
+      14.0
+    ],
+    "video": "assets/videos/curved_path.mp4",
+    "poster": "assets/posters/curved_path.jpg",
+    "path_control": true,
+    "bytes": 1072244,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "variable_speed",
+    "section": "path-speed-control",
+    "title": "Variable speed with a fixed prompt",
+    "prompts": [
+      "A person walks forward."
+    ],
+    "duration_seconds": 12.0,
+    "ends_seconds": [
+      12.0
+    ],
+    "video": "assets/videos/variable_speed.mp4",
+    "poster": "assets/posters/variable_speed.jpg",
+    "path_control": true,
+    "bytes": 851901,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "long_actions",
+    "section": "long-form-generation",
+    "title": "Continuous motion with changing actions",
+    "prompts": [
+      "A person walks forward.",
+      "A person waves with both hands.",
+      "A person walks forward.",
+      "A person squats down and stands up.",
+      "A person walks forward.",
+      "A person jumps up and down.",
+      "A person walks backward.",
+      "A person dances.",
+      "A person bends down and picks something up from the floor."
+    ],
+    "duration_seconds": 48.0,
+    "ends_seconds": [
+      4.0,
+      10.0,
+      14.0,
+      20.0,
+      24.0,
+      30.0,
+      34.0,
+      40.0,
+      48.0
+    ],
+    "video": "assets/videos/long_actions.mp4",
+    "poster": "assets/posters/long_actions.jpg",
+    "path_control": false,
+    "bytes": 2474420,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "long_locomotion",
+    "section": "long-form-generation",
+    "title": "Continuous locomotion and path control",
+    "prompts": [
+      "A person walks forward.",
+      "A person jogs forward.",
+      "A person runs forward.",
+      "A person walks forward.",
+      "A person stands still.",
+      "A person walks forward.",
+      "A person walks backward.",
+      "A person walks forward.",
+      "A person walks forward.",
+      "A person jogs forward."
+    ],
+    "duration_seconds": 60.0,
+    "ends_seconds": [
+      6.0,
+      12.0,
+      18.0,
+      24.0,
+      30.0,
+      36.0,
+      42.0,
+      48.0,
+      54.0,
+      60.0
+    ],
+    "video": "assets/videos/long_locomotion.mp4",
+    "poster": "assets/posters/long_locomotion.jpg",
+    "path_control": true,
+    "bytes": 5264846,
+    "poster_time_seconds": 3.0
+  },
+  {
+    "id": "court_sequence",
+    "section": "long-form-generation",
+    "title": "Court route with changing actions",
+    "prompts": [
+      "A person jogs forward.",
+      "A person jumps far forward.",
+      "A person runs forward.",
+      "A person walks in a crouched position.",
+      "A person stands up from a squat.",
+      "A person jogs forward.",
+      "A person jumps far forward.",
+      "A person walks in a crouched position.",
+      "A person stands up from a squat.",
+      "A person runs forward."
+    ],
+    "duration_seconds": 56.0,
+    "ends_seconds": [
+      8.0,
+      10.0,
+      16.0,
+      26.0,
+      30.0,
+      36.0,
+      38.0,
+      46.0,
+      50.0,
+      56.0
+    ],
+    "video": "assets/videos/court_sequence.mp4",
+    "poster": "assets/posters/court_sequence.jpg",
+    "path_control": true,
+    "bytes": 6089524,
+    "poster_time_seconds": 3.0
+  }
+]
