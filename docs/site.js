@@ -141,7 +141,7 @@
   videos.forEach(video => {
     const frame = video.closest('.showcase-player') || video;
     videoObserver.observe(frame);
-    preloadObserver.observe(frame);
+    if (video !== film) preloadObserver.observe(frame);
   });
 
   const showcase = document.querySelector('#continuous-transitions');
@@ -171,12 +171,11 @@
   };
 
   const updateFraming = result => {
-    const focused = mobileView.matches && result.dataset.fullView !== 'true';
+    const focused = result.dataset.fullView !== 'true';
     result.classList.add('has-framing');
     result.classList.toggle('is-focused', focused);
     result.querySelector('video').controls = !focused;
   };
-  mobileView.addEventListener('change', () => results.forEach(updateFraming));
   let selectedGroup = groups.find(group => !group.hidden);
   let tabsVisible = false;
   let rotationTimer = null;
@@ -298,7 +297,7 @@
         result.dataset.fullView = String(fullView);
         framingButton.textContent = fullView ? 'Focus on motion ↙' : 'Full view ↗';
         updateFraming(result);
-        if (result.getBoundingClientRect().top < resultsViewportTop()) {
+        if (!mobileView.matches || result.getBoundingClientRect().top < resultsViewportTop()) {
           result.scrollIntoView({block: 'start', behavior: 'instant'});
           scrollReference = window.scrollY;
         }
