@@ -1,119 +1,215 @@
 (() => {
   'use strict';
-  const videos = [...document.querySelectorAll('video')];
+  const videos = [...document.querySelectorAll('video:not(#hero-video)')];
   const status = document.querySelector('#playback-status');
   const announce = text => { status.textContent = text; };
-  const pauseOthers = current => videos.forEach(video => {
-    if (video !== current && !video.paused) video.pause();
-  });
+  const playback = new Map(videos.map(video => [video, {
+    visible: false, pausedByUser: false, scriptedPauses: 0
+  }]));
+  const pause = video => {
+    if (!video.paused) {
+      playback.get(video).scriptedPauses += 1;
+      video.pause();
+    }
+  };
   const play = async video => {
+    playback.get(video).pausedByUser = false;
     try { await video.play(); }
     catch { announce('Use the video play button to begin playback.'); }
   };
+  const updatePlayback = video => {
+    const state = playback.get(video);
+    if (state.visible && !document.hidden && !video.closest('[hidden]') &&
+        !state.pausedByUser && !video.ended) {
+      if (video.paused) video.play().catch(() => {});
+    } else pause(video);
+  };
+
+  const hero = document.querySelector('#hero-video');
+  const header = document.querySelector('.site-header');
+  const worksMenu = document.querySelector('.works-menu');
+  const credits = document.querySelector('#team');
+  const research = document.querySelector('.research-content');
+  credits.addEventListener('focusin', event => {
+    if (event.target.matches(':focus-visible') &&
+        event.target.getBoundingClientRect().bottom > research.getBoundingClientRect().top) {
+      window.scrollBy({top: credits.getBoundingClientRect().top, behavior: 'instant'});
+    }
+  });
+  document.addEventListener('click', event => {
+    if (!worksMenu.contains(event.target) || event.target.closest('a')) worksMenu.open = false;
+  });
+  worksMenu.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && worksMenu.open) {
+      event.preventDefault();
+      worksMenu.open = false;
+      worksMenu.querySelector('summary').focus();
+    }
+  });
+  worksMenu.addEventListener('focusout', event => {
+    if (!worksMenu.contains(event.relatedTarget)) worksMenu.open = false;
+  });
+  new IntersectionObserver(([entry]) => {
+    header.classList.toggle('is-visible', !entry.isIntersecting && entry.boundingClientRect.top < 0);
+    if (entry.isIntersecting) worksMenu.open = false;
+  }, {rootMargin: `-${header.offsetHeight}px 0px 0px 0px`}).observe(hero);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let heroVisible = false;
+  const updateHero = () => {
+    if (heroVisible && !document.hidden && !reducedMotion.matches) {
+      hero.play().catch(() => {});
+    } else hero.pause();
+  };
+  reducedMotion.addEventListener('change', updateHero);
+  new IntersectionObserver(([entry]) => {
+    heroVisible = entry.isIntersecting;
+    updateHero();
+  }).observe(hero);
+  document.addEventListener('visibilitychange', updateHero);
+
+  document.querySelector('#watch-film').addEventListener('click', () => {
+    const film = document.querySelector('#overview-video');
+    play(film);
+  });
 
   videos.forEach(video => {
-    const shell = video.closest('.video-shell');
-    if (shell) {
-      const button = document.createElement('button');
-      button.className = 'play-video';
-      button.type = 'button';
-      button.setAttribute('aria-label', `Play ${video.getAttribute('aria-label')}`);
-      button.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 11 7-11 7z"/></svg>';
-      video.controls = false;
-      shell.append(button);
-      button.addEventListener('click', () => {
-        video.controls = true;
-        play(video);
-      });
-      video.addEventListener('play', () => { button.hidden = true; video.controls = true; });
-      video.addEventListener('error', () => { button.hidden = true; video.controls = true; });
-    }
-    video.addEventListener('play', () => pauseOthers(video));
+    const state = playback.get(video);
+    video.muted = true;
+    video.controls = true;
+    video.addEventListener('play', () => {
+      if (!video.paused) state.pausedByUser = false;
+    });
+    video.addEventListener('pause', () => {
+      if (state.scriptedPauses) state.scriptedPauses -= 1;
+      else if (!video.ended) state.pausedByUser = true;
+    });
     video.addEventListener('error', () => {
-      announce('The video could not load. Use its download link to open it directly.');
+      announce('The video could not load. Please reload the page and try again.');
     });
   });
-
-  document.querySelectorAll('[data-pause-all]').forEach(button => {
-    button.addEventListener('click', () => {
-      pauseOthers(null);
-      announce('All videos paused.');
+  const videoObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      playback.get(entry.target).visible = entry.isIntersecting && entry.intersectionRatio >= 0.1;
+      updatePlayback(entry.target);
     });
-  });
+  }, {threshold: 0.1});
+  videos.forEach(video => videoObserver.observe(video));
 
-  document.querySelectorAll('.sequence-panel').forEach(panel => {
-    const video = panel.querySelector('video');
-    const steps = [...panel.querySelectorAll('.prompt-step')];
-    const progress = panel.querySelector('.video-progress span');
-    const update = () => {
-      const time = video.currentTime;
-      let active = steps.findIndex(step => time < Number(step.dataset.end));
-      if (active < 0) active = steps.length - 1;
-      steps.forEach((step, index) => {
-        if (index === active) step.setAttribute('aria-current', 'step');
-        else step.removeAttribute('aria-current');
-      });
-      if (Number.isFinite(video.duration) && video.duration > 0) {
-        progress.style.width = `${Math.min(100, time / video.duration * 100)}%`;
-      }
-    };
-    video.addEventListener('timeupdate', update);
-    video.addEventListener('loadedmetadata', update);
-    steps.forEach(step => step.addEventListener('click', () => {
-      const seek = () => {
-        video.currentTime = Number(step.dataset.start);
-        update();
-        play(video);
-      };
-      if (video.readyState >= 1) seek();
-      else {
-        video.addEventListener('loadedmetadata', seek, {once: true});
-        video.load();
-      }
-    }));
-    update();
-  });
+  const showcase = document.querySelector('#continuous-transitions');
+  const tabs = document.querySelector('.showcase-tabs');
+  const categoryButtons = [...document.querySelectorAll('.category-choice')];
+  const groups = [...document.querySelectorAll('.result-group')];
+  const description = document.querySelector('#motion-description');
+  let selectedGroup = groups.find(group => !group.hidden);
+  let tabsVisible = false;
+  let rotationTimer = null;
 
-  document.querySelectorAll('[data-example-group]').forEach(group => {
-    const picker = group.querySelector('.example-picker');
-    const buttons = [...picker.querySelectorAll('.example-choice')];
-    const panels = [...group.querySelectorAll('.sequence-panel')];
-    const select = id => {
-      panels.forEach(panel => {
-        panel.hidden = panel.id !== id;
-        if (panel.hidden) panel.querySelector('video').pause();
-      });
-      buttons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.target === id)));
-    };
-    picker.hidden = false;
-    buttons.forEach(button => button.addEventListener('click', () => select(button.dataset.target)));
-    select(group.dataset.default);
-    const initial = location.hash.slice(1);
-    if (panels.some(panel => panel.id === initial)) select(initial);
-    window.addEventListener('hashchange', () => {
-      const id = location.hash.slice(1);
-      if (panels.some(panel => panel.id === id)) select(id);
-    });
-  });
-
-  const copy = document.querySelector('#copy-citation');
-  copy.hidden = false;
-  copy.addEventListener('click', async () => {
-    const text = document.querySelector('#citation-text').textContent;
-    try {
-      await navigator.clipboard.writeText(text);
-      copy.textContent = 'Copied';
-      announce('Citation copied.');
-      window.setTimeout(() => { copy.textContent = 'Copy BibTeX'; }, 2000);
-    } catch {
-      const selection = window.getSelection();
-      const range = document.createRange();
-      range.selectNodeContents(document.querySelector('#citation-text'));
-      selection.removeAllRanges();
-      selection.addRange(range);
-      announce('Citation selected. Copy it with your keyboard.');
+  const stopRotation = () => {
+    clearTimeout(rotationTimer);
+    rotationTimer = null;
+  };
+  const canRotate = () => tabsVisible && !document.hidden && !reducedMotion.matches &&
+    !document.fullscreenElement && !videos.some(video => video.webkitDisplayingFullscreen) &&
+    !selectedGroup.matches(':hover') &&
+    !selectedGroup.contains(document.activeElement) &&
+    !selectedGroup.querySelector('details[open]') &&
+    ![...selectedGroup.querySelectorAll('video')].some(video => playback.get(video).pausedByUser);
+  const updateRotation = () => {
+    if (!canRotate()) {
+      stopRotation();
+      return;
     }
+    if (rotationTimer !== null) return;
+    rotationTimer = setTimeout(() => {
+      stopRotation();
+      if (canRotate()) {
+        const next = groups[(groups.indexOf(selectedGroup) + 1) % groups.length];
+        selectCategory(next.dataset.categoryPanel);
+      }
+    }, 20000);
+  };
+  const selectCategory = id => {
+    stopRotation();
+    selectedGroup = groups.find(group => group.dataset.categoryPanel === id);
+    groups.forEach(group => { group.hidden = group !== selectedGroup; });
+    categoryButtons.forEach(button => {
+      button.setAttribute('aria-pressed', String(button.dataset.category === id));
+    });
+    description.textContent = selectedGroup.dataset.description;
+    videos.forEach(updatePlayback);
+    updateRotation();
+  };
+  const selectFromHash = () => {
+    const id = location.hash.slice(1);
+    const example = document.getElementById(id);
+    const group = groups.find(item => item.dataset.categoryPanel === id) ||
+      (example?.matches('.motion-result') && example.closest('.result-group'));
+    if (!group) return false;
+    selectCategory(group.dataset.categoryPanel);
+    (example?.matches('.motion-result') ? example : showcase)
+      .scrollIntoView({block: 'start', behavior: 'instant'});
+    return true;
+  };
+
+  categoryButtons.forEach(button => button.addEventListener('click', () => {
+    selectCategory(button.dataset.category);
+    history.replaceState(null, '', `#${button.dataset.category}`);
+  }));
+  groups.forEach(group => {
+    group.addEventListener('pointerenter', updateRotation);
+    group.addEventListener('pointerleave', updateRotation);
+    group.addEventListener('focusin', updateRotation);
+    group.addEventListener('focusout', () => queueMicrotask(updateRotation));
+    group.querySelectorAll('details').forEach(details => {
+      details.addEventListener('toggle', updateRotation);
+    });
+    group.querySelectorAll('.motion-result').forEach(result => {
+      const video = result.querySelector('video');
+      const steps = [...result.querySelectorAll('.prompt-step')];
+      let pendingSeek = null;
+      const updatePrompts = () => {
+        steps.forEach(step => {
+          if (video.currentTime >= Number(step.dataset.start) &&
+              video.currentTime < Number(step.dataset.end)) {
+            step.setAttribute('aria-current', 'step');
+          } else step.removeAttribute('aria-current');
+        });
+      };
+      result.addEventListener('click', event => {
+        const step = event.target.closest('.prompt-step');
+        if (!step) return;
+        pendingSeek = Number(step.dataset.start);
+        if (video.readyState >= 1) {
+          video.currentTime = pendingSeek;
+          pendingSeek = null;
+          updatePrompts();
+        }
+        play(video);
+      });
+      video.addEventListener('timeupdate', updatePrompts);
+      video.addEventListener('loadedmetadata', () => {
+        if (pendingSeek !== null) {
+          video.currentTime = pendingSeek;
+          pendingSeek = null;
+        }
+        updatePrompts();
+      });
+      video.addEventListener('play', updateRotation);
+      video.addEventListener('pause', updateRotation);
+      video.addEventListener('webkitbeginfullscreen', stopRotation);
+      video.addEventListener('webkitendfullscreen', updateRotation);
+      updatePrompts();
+    });
   });
+  new IntersectionObserver(([entry]) => {
+    tabsVisible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
+    updateRotation();
+  }, {threshold: 0.5, rootMargin: `-${header.offsetHeight}px 0px 0px 0px`}).observe(tabs);
+  document.addEventListener('visibilitychange', updateRotation);
+  document.addEventListener('fullscreenchange', updateRotation);
+  reducedMotion.addEventListener('change', updateRotation);
+  window.addEventListener('hashchange', selectFromHash);
+  if (!selectFromHash()) selectCategory(selectedGroup.dataset.categoryPanel);
 
   if ('IntersectionObserver' in window) {
     const navigation = [...document.querySelectorAll('nav a[href^="#"]')];
@@ -131,6 +227,6 @@
     });
   }
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) pauseOthers(null);
+    videos.forEach(updatePlayback);
   });
 })();
