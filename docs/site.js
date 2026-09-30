@@ -89,26 +89,42 @@
   });
   const videoObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      playback.get(entry.target).visible = entry.isIntersecting && entry.intersectionRatio >= 0.1;
-      updatePlayback(entry.target);
+      const video = entry.target.matches('video') ? entry.target : entry.target.querySelector('video');
+      playback.get(video).visible = entry.isIntersecting && entry.intersectionRatio >= 0.1;
+      updatePlayback(video);
     });
   }, {threshold: 0.1});
-  videos.forEach(video => videoObserver.observe(video));
+  videos.forEach(video => videoObserver.observe(video.closest('.showcase-player') || video));
 
   const showcase = document.querySelector('#continuous-transitions');
   const tabs = document.querySelector('.showcase-tabs');
   const categoryButtons = [...document.querySelectorAll('.category-choice')];
   const groups = [...document.querySelectorAll('.result-group')];
   const description = document.querySelector('#motion-description');
+  const mobileView = window.matchMedia('(max-width: 720px)');
+  const results = [...document.querySelectorAll('.motion-result')];
+  const updateFraming = result => {
+    const focused = mobileView.matches && result.dataset.fullView !== 'true';
+    result.classList.add('has-framing');
+    result.classList.toggle('is-focused', focused);
+    result.querySelector('video').controls = !focused;
+  };
+  mobileView.addEventListener('change', () => results.forEach(updateFraming));
   let selectedGroup = groups.find(group => !group.hidden);
   let tabsVisible = false;
   let rotationTimer = null;
+  let rotationProgress = null;
 
   const stopRotation = () => {
     clearTimeout(rotationTimer);
     rotationTimer = null;
+    rotationProgress?.cancel();
+    rotationProgress = null;
   };
+  const firstRowTop = () => selectedGroup.querySelector('.motion-result').getBoundingClientRect().top;
+  const resultsViewportTop = () => Math.max(0, header.getBoundingClientRect().bottom) + tabs.offsetHeight;
   const canRotate = () => tabsVisible && !document.hidden && !reducedMotion.matches &&
+    firstRowTop() >= resultsViewportTop() - 16 && firstRowTop() < window.innerHeight &&
     !document.fullscreenElement && !videos.some(video => video.webkitDisplayingFullscreen) &&
     !selectedGroup.matches(':hover') &&
     !selectedGroup.contains(document.activeElement) &&
@@ -120,22 +136,32 @@
       return;
     }
     if (rotationTimer !== null) return;
+    const duration = Number(selectedGroup.dataset.rotationSeconds || 20) * 1000;
+    rotationProgress = tabs.querySelector('[aria-pressed="true"] .category-progress').animate(
+      [{transform: 'scaleX(0)'}, {transform: 'scaleX(1)'}],
+      {duration, easing: 'linear', fill: 'forwards'}
+    );
     rotationTimer = setTimeout(() => {
       stopRotation();
       if (canRotate()) {
         const next = groups[(groups.indexOf(selectedGroup) + 1) % groups.length];
         selectCategory(next.dataset.categoryPanel);
       }
-    }, Number(selectedGroup.dataset.rotationSeconds || 20) * 1000);
+    }, duration);
   };
   const selectCategory = id => {
     stopRotation();
-    selectedGroup = groups.find(group => group.dataset.categoryPanel === id);
+    const next = groups.find(group => group.dataset.categoryPanel === id);
+    const changed = next !== selectedGroup;
+    selectedGroup = next;
     groups.forEach(group => { group.hidden = group !== selectedGroup; });
     categoryButtons.forEach(button => {
       button.setAttribute('aria-pressed', String(button.dataset.category === id));
     });
     description.textContent = selectedGroup.dataset.description;
+    if (changed && !reducedMotion.matches) {
+      selectedGroup.animate([{opacity: 0}, {opacity: 1}], {duration: 220, easing: 'ease-out'});
+    }
     videos.forEach(updatePlayback);
     updateRotation();
   };
@@ -152,8 +178,12 @@
   };
 
   categoryButtons.forEach(button => button.addEventListener('click', () => {
+    const returnToTop = firstRowTop() < resultsViewportTop() - 16;
     selectCategory(button.dataset.category);
     history.replaceState(null, '', `#${button.dataset.category}`);
+    if (returnToTop) {
+      showcase.scrollIntoView({block: 'start', behavior: reducedMotion.matches ? 'instant' : 'smooth'});
+    }
   }));
   groups.forEach(group => {
     group.addEventListener('pointerenter', updateRotation);
@@ -166,7 +196,17 @@
     group.querySelectorAll('.motion-result').forEach(result => {
       const video = result.querySelector('video');
       const steps = [...result.querySelectorAll('.prompt-step')];
+      const mobilePrompt = result.querySelector('.mobile-prompt');
+      const playButton = result.querySelector('.motion-play');
+      const framingButton = result.querySelector('.framing-toggle');
+      const subjects = [...result.querySelectorAll('[data-subject]')];
+      const staticPrompts = [...result.querySelectorAll('.prompt-static')];
+      let selectedSubject = 0;
       let pendingSeek = null;
+      const updatePlayButton = () => {
+        playButton.dataset.playing = String(!video.paused);
+        playButton.setAttribute('aria-label', `${video.paused ? 'Play' : 'Pause'} ${video.getAttribute('aria-label')}`);
+      };
       const updatePrompts = () => {
         steps.forEach(step => {
           if (video.currentTime >= Number(step.dataset.start) &&
@@ -174,7 +214,28 @@
             step.setAttribute('aria-current', 'step');
           } else step.removeAttribute('aria-current');
         });
+        const current = result.querySelector('.prompt-step[aria-current="step"] span:last-child');
+        const text = current?.textContent || staticPrompts[selectedSubject]?.textContent || '';
+        if (mobilePrompt.textContent !== text) mobilePrompt.textContent = text;
       };
+      playButton.addEventListener('click', () => {
+        if (video.paused) play(video);
+        else video.pause();
+      });
+      framingButton.addEventListener('click', () => {
+        const fullView = result.dataset.fullView !== 'true';
+        result.dataset.fullView = String(fullView);
+        framingButton.textContent = fullView ? 'Focus on motion ↙' : 'Full view ↗';
+        updateFraming(result);
+      });
+      subjects.forEach(button => button.addEventListener('click', () => {
+        selectedSubject = Number(button.dataset.subject);
+        subjects.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
+        result.style.setProperty('--crop-x', button.dataset.cropX);
+        updatePrompts();
+      }));
+      updateFraming(result);
+      updatePlayButton();
       result.addEventListener('click', event => {
         const step = event.target.closest('.prompt-step');
         if (!step) return;
@@ -196,6 +257,8 @@
       });
       video.addEventListener('play', updateRotation);
       video.addEventListener('pause', updateRotation);
+      video.addEventListener('play', updatePlayButton);
+      video.addEventListener('pause', updatePlayButton);
       video.addEventListener('webkitbeginfullscreen', stopRotation);
       video.addEventListener('webkitendfullscreen', updateRotation);
       updatePrompts();
@@ -205,6 +268,16 @@
     tabsVisible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
     updateRotation();
   }, {threshold: 0.5, rootMargin: `-${header.offsetHeight}px 0px 0px 0px`}).observe(tabs);
+  let rotationFrame = null;
+  const scheduleRotationUpdate = () => {
+    if (rotationFrame !== null) return;
+    rotationFrame = requestAnimationFrame(() => {
+      rotationFrame = null;
+      updateRotation();
+    });
+  };
+  window.addEventListener('scroll', scheduleRotationUpdate, {passive: true});
+  window.addEventListener('resize', scheduleRotationUpdate);
   document.addEventListener('visibilitychange', updateRotation);
   document.addEventListener('fullscreenchange', updateRotation);
   reducedMotion.addEventListener('change', updateRotation);
