@@ -124,8 +124,7 @@ h1 span { color: #dcdcdc; }
 .showcase-player { overflow: hidden; border-radius: 10px; background: #ffffff; }
 .showcase-player video { display: block; width: 100%; aspect-ratio: 16/9; object-fit: contain; background: #ffffff; color-scheme: light; }
 .showcase-prompts { border-bottom: 1px solid var(--line); }
-.showcase-prompts summary { display: flex; align-items: center; gap: 12px; list-style: none; padding: 14px 0; color: var(--muted); font-size: 12px; cursor: pointer; }
-.showcase-prompts h3 { flex: 1; margin: 0; color: var(--ink); font-size: 14px; font-weight: 400; line-height: 1.5; }
+.showcase-prompts summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; list-style: none; padding: 14px 0; color: var(--muted); font-size: 12px; cursor: pointer; }
 .showcase-prompts summary::-webkit-details-marker { display: none; }
 .showcase-prompts summary::after { content: '+'; font-size: 19px; line-height: 1; }
 .showcase-prompts[open] summary::after { content: '−'; }

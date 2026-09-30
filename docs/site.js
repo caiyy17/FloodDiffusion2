@@ -126,7 +126,7 @@
         const next = groups[(groups.indexOf(selectedGroup) + 1) % groups.length];
         selectCategory(next.dataset.categoryPanel);
       }
-    }, 20000);
+    }, Number(selectedGroup.dataset.rotationSeconds || 20) * 1000);
   };
   const selectCategory = id => {
     stopRotation();
