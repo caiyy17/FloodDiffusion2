@@ -67,10 +67,23 @@
   }).observe(hero);
   document.addEventListener('visibilitychange', updateHero);
 
-  document.querySelector('#watch-film').addEventListener('click', () => {
-    const film = document.querySelector('#overview-video');
-    play(film);
+  const film = document.querySelector('#overview-video');
+  const soundButton = document.querySelector('#film-sound');
+  const updateSoundButton = () => {
+    const audible = !film.muted && film.volume > 0;
+    soundButton.dataset.audible = String(audible);
+    soundButton.querySelector('.sound-label').textContent = audible ? 'Sound off' : 'Sound on';
+    soundButton.setAttribute('aria-label', audible ? 'Turn sound off' : 'Turn sound on');
+  };
+  soundButton.addEventListener('click', () => {
+    const audible = !film.muted && film.volume > 0;
+    film.muted = audible;
+    if (!audible && film.volume === 0) film.volume = 1;
   });
+  film.addEventListener('volumechange', updateSoundButton);
+  updateSoundButton();
+  soundButton.hidden = false;
+  document.querySelector('#watch-film').addEventListener('click', () => play(film));
 
   videos.forEach(video => {
     const state = playback.get(video);
@@ -94,7 +107,19 @@
       updatePlayback(video);
     });
   }, {threshold: 0.1});
-  videos.forEach(video => videoObserver.observe(video.closest('.showcase-player') || video));
+  const preloadObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const video = entry.target.matches('video') ? entry.target : entry.target.querySelector('video');
+      video.preload = 'auto';
+      preloadObserver.unobserve(entry.target);
+    });
+  }, {rootMargin: `${window.innerHeight}px 0px`});
+  videos.forEach(video => {
+    const frame = video.closest('.showcase-player') || video;
+    videoObserver.observe(frame);
+    preloadObserver.observe(frame);
+  });
 
   const showcase = document.querySelector('#continuous-transitions');
   const tabs = document.querySelector('.showcase-tabs');
