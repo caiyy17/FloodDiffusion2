@@ -103,6 +103,25 @@
   const description = document.querySelector('#motion-description');
   const mobileView = window.matchMedia('(max-width: 720px)');
   const results = [...document.querySelectorAll('.motion-result')];
+  let wasInDemo = false;
+  let scrollReference = window.scrollY;
+  const updateDemoNavigation = () => {
+    const bounds = showcase.getBoundingClientRect();
+    const inDemo = mobileView.matches && bounds.top <= header.offsetHeight &&
+      bounds.bottom > header.offsetHeight;
+    const keyboardFocus = header.contains(document.activeElement) &&
+      document.activeElement.matches(':focus-visible');
+    const distance = window.scrollY - scrollReference;
+    if (!inDemo || worksMenu.open || keyboardFocus) {
+      document.documentElement.classList.remove('demo-nav-collapsed');
+      scrollReference = window.scrollY;
+    } else if (!wasInDemo || Math.abs(distance) > 12) {
+      document.documentElement.classList.toggle('demo-nav-collapsed', !wasInDemo || distance > 0);
+      scrollReference = window.scrollY;
+    }
+    wasInDemo = inDemo;
+  };
+
   const updateFraming = result => {
     const focused = mobileView.matches && result.dataset.fullView !== 'true';
     result.classList.add('has-framing');
@@ -122,7 +141,7 @@
     rotationProgress = null;
   };
   const firstRowTop = () => selectedGroup.querySelector('.motion-result').getBoundingClientRect().top;
-  const resultsViewportTop = () => Math.max(0, header.getBoundingClientRect().bottom) + tabs.offsetHeight;
+  const resultsViewportTop = () => tabs.getBoundingClientRect().bottom;
   const canRotate = () => tabsVisible && !document.hidden && !reducedMotion.matches &&
     firstRowTop() >= resultsViewportTop() - 16 && firstRowTop() < window.innerHeight &&
     !document.fullscreenElement && !videos.some(video => video.webkitDisplayingFullscreen) &&
@@ -172,8 +191,11 @@
       (example?.matches('.motion-result') && example.closest('.result-group'));
     if (!group) return false;
     selectCategory(group.dataset.categoryPanel);
+    if (mobileView.matches) document.documentElement.classList.add('demo-nav-collapsed');
     (example?.matches('.motion-result') ? example : showcase)
       .scrollIntoView({block: 'start', behavior: 'instant'});
+    scrollReference = window.scrollY;
+    wasInDemo = mobileView.matches;
     return true;
   };
 
@@ -182,6 +204,7 @@
     selectCategory(button.dataset.category);
     history.replaceState(null, '', `#${button.dataset.category}`);
     if (returnToTop) {
+      document.documentElement.classList.remove('demo-nav-collapsed');
       showcase.scrollIntoView({block: 'start', behavior: reducedMotion.matches ? 'instant' : 'smooth'});
     }
   }));
@@ -227,6 +250,10 @@
         result.dataset.fullView = String(fullView);
         framingButton.textContent = fullView ? 'Focus on motion ↙' : 'Full view ↗';
         updateFraming(result);
+        if (result.getBoundingClientRect().top < resultsViewportTop()) {
+          result.scrollIntoView({block: 'start', behavior: 'instant'});
+          scrollReference = window.scrollY;
+        }
       });
       subjects.forEach(button => button.addEventListener('click', () => {
         selectedSubject = Number(button.dataset.subject);
@@ -267,17 +294,21 @@
   new IntersectionObserver(([entry]) => {
     tabsVisible = entry.isIntersecting && entry.intersectionRatio >= 0.5;
     updateRotation();
-  }, {threshold: 0.5, rootMargin: `-${header.offsetHeight}px 0px 0px 0px`}).observe(tabs);
+  }, {threshold: 0.5}).observe(tabs);
   let rotationFrame = null;
   const scheduleRotationUpdate = () => {
     if (rotationFrame !== null) return;
     rotationFrame = requestAnimationFrame(() => {
       rotationFrame = null;
+      updateDemoNavigation();
       updateRotation();
     });
   };
   window.addEventListener('scroll', scheduleRotationUpdate, {passive: true});
   window.addEventListener('resize', scheduleRotationUpdate);
+  tabs.addEventListener('transitionend', scheduleRotationUpdate);
+  header.addEventListener('focusin', scheduleRotationUpdate);
+  worksMenu.addEventListener('toggle', scheduleRotationUpdate);
   document.addEventListener('visibilitychange', updateRotation);
   document.addEventListener('fullscreenchange', updateRotation);
   reducedMotion.addEventListener('change', updateRotation);
