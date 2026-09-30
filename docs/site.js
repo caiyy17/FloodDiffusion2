@@ -1,6 +1,8 @@
 (() => {
   'use strict';
   const videos = [...document.querySelectorAll('video:not(#hero-video)')];
+  const film = document.querySelector('#overview-video');
+  let filmNeedsGesture = false;
   const status = document.querySelector('#playback-status');
   const announce = text => { status.textContent = text; };
   const playback = new Map(videos.map(video => [video, {
@@ -17,11 +19,22 @@
     try { await video.play(); }
     catch { announce('Use the video play button to begin playback.'); }
   };
+  const autoplay = async video => {
+    try { await video.play(); }
+    catch (error) {
+      if (video !== film || error.name !== 'NotAllowedError' || film.muted) return;
+      const state = playback.get(film);
+      if (!state.visible || document.hidden || state.pausedByUser) return;
+      filmNeedsGesture = true;
+      film.muted = true;
+      film.play().catch(() => {});
+    }
+  };
   const updatePlayback = video => {
     const state = playback.get(video);
     if (state.visible && !document.hidden && !video.closest('[hidden]') &&
         !state.pausedByUser && !video.ended) {
-      if (video.paused) video.play().catch(() => {});
+      if (video.paused) autoplay(video);
     } else pause(video);
   };
 
@@ -67,27 +80,37 @@
   }).observe(hero);
   document.addEventListener('visibilitychange', updateHero);
 
-  const film = document.querySelector('#overview-video');
   const soundButton = document.querySelector('#film-sound');
   const updateSoundButton = () => {
     const audible = !film.muted && film.volume > 0;
+    if (audible || film.volume === 0) filmNeedsGesture = false;
     soundButton.dataset.audible = String(audible);
     soundButton.querySelector('.sound-label').textContent = audible ? 'Sound off' : 'Sound on';
     soundButton.setAttribute('aria-label', audible ? 'Turn sound off' : 'Turn sound on');
   };
   soundButton.addEventListener('click', () => {
     const audible = !film.muted && film.volume > 0;
+    filmNeedsGesture = false;
     film.muted = audible;
     if (!audible && film.volume === 0) film.volume = 1;
+    if (!audible && !playback.get(film).pausedByUser) play(film);
   });
   film.addEventListener('volumechange', updateSoundButton);
   updateSoundButton();
   soundButton.hidden = false;
-  document.querySelector('#watch-film').addEventListener('click', () => play(film));
+  document.querySelectorAll('#watch-film, .site-header a[href="#overview"]').forEach(link => {
+    link.addEventListener('click', () => {
+      if (filmNeedsGesture) {
+        filmNeedsGesture = false;
+        film.muted = false;
+      }
+      play(film);
+    });
+  });
 
   videos.forEach(video => {
     const state = playback.get(video);
-    video.muted = true;
+    video.muted = video !== film;
     video.controls = true;
     video.addEventListener('play', () => {
       if (!video.paused) state.pausedByUser = false;

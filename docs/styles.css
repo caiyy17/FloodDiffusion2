@@ -210,7 +210,7 @@ h1 span { color: #dcdcdc; }
   .site-header nav { width: 100%; gap: 22px; overflow-x: auto; scrollbar-width: none; padding-bottom: 1px; }
   .site-header nav::-webkit-scrollbar { display: none; }
   .header-code { padding-left: 21px; }
-  .hero-video { object-position: 61% center; }
+  .hero-video { object-position: 50% center; }
   .hero-shade { background: linear-gradient(90deg, #060606b8 0%, #09090950 100%), linear-gradient(0deg, #000000, #08080815 65%); }
   .hero-content { padding-top: 0; padding-bottom: 60px; }
   .hero h1 { font-size: clamp(44px, 9.8vw, 65px); letter-spacing: -.06em; }
