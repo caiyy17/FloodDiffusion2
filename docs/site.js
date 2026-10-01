@@ -219,13 +219,18 @@
   };
   let viewerResult = null;
   let viewerPlaceholder = null;
+  let viewerResults = [];
+  let viewerOpener = null;
   let viewerScroll = 0;
-  const openViewer = result => {
-    stopRotation();
+  const restoreViewerResult = () => {
+    pause(viewerResult.querySelector('video'));
+    viewerPlaceholder.replaceWith(viewerResult);
+    viewerResult.dataset.fullView = 'false';
+    updateFraming(viewerResult);
+  };
+  const showViewerResult = result => {
     viewerResult = result;
-    viewerScroll = window.scrollY;
-    const video = result.querySelector('video');
-    pause(video);
+    pause(result.querySelector('video'));
     viewerPlaceholder = document.createElement('div');
     viewerPlaceholder.className = 'motion-placeholder';
     viewerPlaceholder.style.height = `${result.getBoundingClientRect().height}px`;
@@ -234,30 +239,71 @@
     result.dataset.fullView = 'true';
     updateFraming(result);
     viewer.querySelector('#viewer-title').textContent = result.getAttribute('aria-label');
+    const position = viewerResults.indexOf(result) + 1;
+    const counter = viewer.querySelector('.viewer-counter');
+    counter.textContent = `${position} / ${viewerResults.length}`;
+    counter.setAttribute('aria-label', `Example ${position} of ${viewerResults.length}`);
+    viewer.scrollTop = 0;
+  };
+  const openViewer = result => {
+    stopRotation();
+    viewerResults = [...result.closest('.result-group').querySelectorAll('.motion-result')];
+    viewerOpener = result.querySelector('.framing-toggle');
+    viewerScroll = window.scrollY;
+    showViewerResult(result);
     document.documentElement.style.setProperty('--viewer-scrollbar', `${window.innerWidth - document.documentElement.clientWidth}px`);
     document.documentElement.classList.add('viewer-open');
     viewer.showModal();
     videos.forEach(updatePlayback);
     updateHero();
   };
+  const browseViewer = direction => {
+    const next = (viewerResults.indexOf(viewerResult) + direction + viewerResults.length) % viewerResults.length;
+    restoreViewerResult();
+    showViewerResult(viewerResults[next]);
+    videos.forEach(updatePlayback);
+  };
   const closeViewer = (restorePosition = true) => {
     if (!viewerResult) return;
-    const result = viewerResult;
-    pause(result.querySelector('video'));
-    viewerPlaceholder.replaceWith(result);
-    result.dataset.fullView = 'false';
-    updateFraming(result);
+    restoreViewerResult();
     viewerResult = null;
     viewerPlaceholder = null;
+    viewerResults = [];
     document.documentElement.classList.remove('viewer-open');
     document.documentElement.style.removeProperty('--viewer-scrollbar');
     if (restorePosition) window.scrollTo({top: viewerScroll, behavior: 'instant'});
-    result.querySelector('.framing-toggle').focus({preventScroll: true});
+    viewerOpener.focus({preventScroll: true});
+    viewerOpener = null;
     videos.forEach(updatePlayback);
     updateHero();
     updateRotation();
   };
   viewer.querySelector('.viewer-close').addEventListener('click', () => viewer.close());
+  viewer.querySelector('.viewer-previous').addEventListener('click', () => browseViewer(-1));
+  viewer.querySelector('.viewer-next').addEventListener('click', () => browseViewer(1));
+  viewer.addEventListener('keydown', event => {
+    if (event.defaultPrevented || event.altKey || event.ctrlKey || event.metaKey ||
+        document.fullscreenElement || event.target.closest('video, input, textarea, select, [contenteditable]')) return;
+    if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return;
+    event.preventDefault();
+    browseViewer(event.key === 'ArrowLeft' ? -1 : 1);
+  });
+  viewer.querySelectorAll('.viewer-heading, .viewer-navigation').forEach(region => {
+    let swipe = null;
+    region.addEventListener('pointerdown', event => {
+      if (event.pointerType !== 'touch' || event.target.closest('button')) return;
+      swipe = {x: event.clientX, y: event.clientY, id: event.pointerId};
+      region.setPointerCapture(event.pointerId);
+    });
+    region.addEventListener('pointerup', event => {
+      if (!swipe || swipe.id !== event.pointerId) return;
+      const dx = event.clientX - swipe.x;
+      const dy = event.clientY - swipe.y;
+      swipe = null;
+      if (Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy) * 1.5) browseViewer(dx < 0 ? 1 : -1);
+    });
+    region.addEventListener('pointercancel', () => { swipe = null; });
+  });
   viewer.addEventListener('close', () => closeViewer());
   viewer.addEventListener('click', event => {
     const bounds = viewer.getBoundingClientRect();

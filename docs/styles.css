@@ -173,18 +173,37 @@ h1 span { color: #dcdcdc; }
 .viewer-open body { padding-right: var(--viewer-scrollbar); }
 .motion-viewer { --ink: #f2f2f2; --muted: #b5b5b5; --line: #ffffff24; --accent: #e5e5e5; width: min(1280px, calc(100vw - 48px)); max-width: none; max-height: calc(100svh - 48px); padding: 20px 24px; border: 1px solid #ffffff24; border-radius: 16px; background: #141414; color: var(--ink); color-scheme: dark; overscroll-behavior: contain; }
 .motion-viewer::backdrop { background: #000000bd; backdrop-filter: blur(8px); }
-.viewer-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 16px; }
+.viewer-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 16px; touch-action: pan-y; }
 .viewer-heading h2 { margin: 0; font-size: 18px; line-height: 1.4; }
 .viewer-close { display: inline-flex; flex-shrink: 0; align-items: center; gap: 12px; min-height: 44px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font-size: 12px; }
 .viewer-close span { font-size: 22px; line-height: 1; }
 .viewer-close:hover { background: #ffffff0d; border-color: #ffffff66; }
+.viewer-navigation { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); touch-action: pan-y; }
+.viewer-navigation button { display: inline-flex; align-items: center; justify-content: center; gap: 10px; min-height: 44px; padding: 8px 14px; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--ink); font-size: 12px; }
+.viewer-navigation button:hover { background: #ffffff0d; border-color: #ffffff66; }
+.viewer-previous { justify-self: start; }
+.viewer-next { justify-self: end; }
+.viewer-position { text-align: center; color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+.viewer-swipe-hint { display: none; margin-top: 3px; font-size: 11px; white-space: nowrap; }
+@media (pointer: coarse) { .viewer-swipe-hint { display: block; } }
 .motion-viewer .mobile-context, .motion-viewer .motion-result .mobile-video-tools { display: none; }
 .motion-viewer .showcase-player { border-radius: 6px; }
-.motion-viewer .showcase-player video { aspect-ratio: auto; max-height: calc(100svh - 200px); }
+.motion-viewer .showcase-player video { aspect-ratio: auto; max-height: calc(100svh - 268px); }
 .motion-viewer .showcase-player video:fullscreen { max-height: none; }
 .motion-viewer .showcase-prompts summary { padding-left: 0; }
 .motion-viewer .prompt-step[aria-current="step"] { background: #ffffff0a; }
 .motion-viewer .prompt-list { max-width: none; }
+
+@media (max-height: 500px) and (orientation: landscape) {
+  .motion-viewer[open] { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; max-height: calc(100svh - 16px); padding: 12px; }
+  .motion-viewer .viewer-heading { display: contents; }
+  .motion-viewer .viewer-heading h2 { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .viewer-close { grid-column: 2; grid-row: 1; }
+  .motion-viewer .viewer-navigation { grid-column: 1; grid-row: 1; display: flex; gap: 14px; margin: 0; padding: 0; border: 0; }
+  .viewer-navigation .viewer-swipe-hint { display: none; }
+  .viewer-content { grid-column: 1 / -1; grid-row: 2; min-width: 0; }
+  .motion-viewer .showcase-player video { max-height: calc(100svh - 140px); }
+}
 
 .team-credits { position: sticky; top: var(--header-height); min-height: calc(100svh - var(--header-height)); display: flex; flex-direction: column; justify-content: flex-start; padding-top: 44px; padding-bottom: 24px; }
 .team-credits h2 { margin: 0 0 22px; font-family: Georgia, 'Times New Roman', serif; font-size: 32px; line-height: 1.15; letter-spacing: -.025em; text-align: center; color: var(--ink); }
@@ -223,6 +242,8 @@ h1 span { color: #dcdcdc; }
   .motion-viewer { width: calc(100vw - 24px); max-height: calc(100svh - 24px); padding: 12px; border-radius: 12px; }
   .viewer-heading { gap: 12px; margin-bottom: 12px; }
   .viewer-heading h2 { font-size: 15px; }
+  .viewer-navigation { gap: 10px; }
+  .viewer-navigation button { gap: 6px; padding-inline: 10px; }
   html { --header-height: 91px; --anchor-offset: 113px; }
   html.demo-nav-collapsed { --nav-offset: 0px; --anchor-offset: 22px; }
   .demo-nav-collapsed .site-header { visibility: hidden; opacity: 0; transform: translateY(-100%); pointer-events: none; }

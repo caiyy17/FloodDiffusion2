@@ -15,8 +15,8 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="canonical" href="https://caiyy17.github.io/FloodDiffusion2/">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=2.7">
-  <script src="site.js?v=2.7" defer></script>
+  <link rel="stylesheet" href="styles.css?v=2.8">
+  <script src="site.js?v=2.8" defer></script>
 </head>
 <body>
 <a class="skip-link" href="#overview">Skip to content</a>
@@ -426,8 +426,13 @@
   </div>
 </main>
 <dialog class="motion-viewer" id="motion-viewer" aria-labelledby="viewer-title">
-  <div class="viewer-heading"><h2 id="viewer-title"></h2><button class="viewer-close" type="button" aria-label="Close full view" autofocus>Close <span aria-hidden="true">×</span></button></div>
+  <div class="viewer-heading"><h2 id="viewer-title" aria-live="polite"></h2><button class="viewer-close" type="button" aria-label="Close full view" autofocus>Close <span aria-hidden="true">×</span></button></div>
   <div class="viewer-content"></div>
+  <nav class="viewer-navigation" aria-label="Motion examples">
+    <button class="viewer-previous" type="button" aria-label="Previous example"><span aria-hidden="true">←</span> Previous</button>
+    <div class="viewer-position"><span class="viewer-counter"></span><span class="viewer-swipe-hint">Swipe to browse</span></div>
+    <button class="viewer-next" type="button" aria-label="Next example">Next <span aria-hidden="true">→</span></button>
+  </nav>
 </dialog>
 <p id="playback-status" class="sr-only" role="status" aria-live="polite"></p>
 </body>
