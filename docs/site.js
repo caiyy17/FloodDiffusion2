@@ -152,7 +152,6 @@
   const groups = [...document.querySelectorAll('.result-group')];
   const description = document.querySelector('#motion-description');
   const mobileView = window.matchMedia('(max-width: 720px)');
-  const results = [...document.querySelectorAll('.motion-result')];
   let wasInDemo = false;
   let scrollReference = window.scrollY;
   const updateDemoNavigation = () => {
@@ -172,12 +171,6 @@
     wasInDemo = inDemo;
   };
 
-  const updateFraming = result => {
-    const focused = result.dataset.fullView !== 'true';
-    result.classList.add('has-framing');
-    result.classList.toggle('is-focused', focused);
-    result.querySelector('video').controls = !focused;
-  };
   let selectedGroup = groups.find(group => !group.hidden);
   let tabsVisible = false;
   let rotationTimer = null;
@@ -225,8 +218,7 @@
   const restoreViewerResult = () => {
     pause(viewerResult.querySelector('video'));
     viewerPlaceholder.replaceWith(viewerResult);
-    viewerResult.dataset.fullView = 'false';
-    updateFraming(viewerResult);
+    viewerResult.querySelector('video').controls = false;
   };
   const showViewerResult = result => {
     viewerResult = result;
@@ -236,8 +228,7 @@
     viewerPlaceholder.style.height = `${result.getBoundingClientRect().height}px`;
     result.replaceWith(viewerPlaceholder);
     viewer.querySelector('.viewer-content').append(result);
-    result.dataset.fullView = 'true';
-    updateFraming(result);
+    result.querySelector('video').controls = true;
     viewer.querySelector('#viewer-title').textContent = result.getAttribute('aria-label');
     const position = viewerResults.indexOf(result) + 1;
     const counter = viewer.querySelector('.viewer-counter');
@@ -361,12 +352,8 @@
     group.querySelectorAll('.motion-result').forEach(result => {
       const video = result.querySelector('video');
       const steps = [...result.querySelectorAll('.prompt-step')];
-      const mobilePrompt = result.querySelector('.mobile-prompt');
       const playButton = result.querySelector('.motion-play');
       const framingButton = result.querySelector('.framing-toggle');
-      const subjects = [...result.querySelectorAll('[data-subject]')];
-      const staticPrompts = [...result.querySelectorAll('.prompt-static')];
-      let selectedSubject = 0;
       let pendingSeek = null;
       const updatePlayButton = () => {
         playButton.dataset.playing = String(!video.paused);
@@ -379,9 +366,6 @@
             step.setAttribute('aria-current', 'step');
           } else step.removeAttribute('aria-current');
         });
-        const current = result.querySelector('.prompt-step[aria-current="step"] span:last-child');
-        const text = current?.textContent || staticPrompts[selectedSubject]?.textContent || '';
-        if (mobilePrompt.textContent !== text) mobilePrompt.textContent = text;
       };
       playButton.addEventListener('click', () => {
         if (video.paused) play(video);
@@ -390,13 +374,7 @@
       framingButton.setAttribute('aria-haspopup', 'dialog');
       framingButton.setAttribute('aria-controls', 'motion-viewer');
       framingButton.addEventListener('click', () => openViewer(result));
-      subjects.forEach(button => button.addEventListener('click', () => {
-        selectedSubject = Number(button.dataset.subject);
-        subjects.forEach(item => item.setAttribute('aria-pressed', String(item === button)));
-        result.style.setProperty('--crop-x', button.dataset.cropX);
-        updatePrompts();
-      }));
-      updateFraming(result);
+      video.controls = false;
       updatePlayButton();
       result.addEventListener('click', event => {
         const step = event.target.closest('.prompt-step');
